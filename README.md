@@ -30,7 +30,8 @@ This is the frontend application for DCFM360, built with Next.js.
 ## Configuration
 
 The frontend is configured to connect to the backend API running on port 3000 through:
-- Environment variables in `.env.local`
+- Environment variables in `.env.local`:
+  - `NEXT_PUBLIC_BACKEND_URL`: URL of the backend API (default: http://localhost:3000)
 - API proxy configuration in `next.config.js`
 
 ## Features

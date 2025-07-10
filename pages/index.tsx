@@ -10,12 +10,15 @@ export default function Home() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await fetch('/iot-status');
+        const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3000';
+        const response = await fetch(`${backendUrl}/iot-status`);
         const data = await response.json();
         setMessage(data.message || 'Connected to backend!');
         setLoading(false);
       } catch (err) {
-        setError('Failed to connect to backend. Make sure the backend is running on port 3000.');
+        const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3000';
+        const port = new URL(backendUrl).port || '3000';
+        setError(`Failed to connect to backend. Make sure the backend is running on port ${port}.`);
         setLoading(false);
       }
     }

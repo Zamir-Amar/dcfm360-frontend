@@ -17,13 +17,15 @@ export default function DevicesPage() {
     // Function to fetch devices
     async function fetchDevices() {
       try {
-        const response = await fetch('/iot/devices');
+        // Use the environment variable for the backend URL
+        const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || '';
+        const response = await fetch(`${backendUrl}/iot/devices`);
         const data = await response.json();
         
         if (data.error) {
           setError(data.error);
         } else {
-          setDevices(data.devices);
+          setDevices(data);
           setError('');
         }
         setLoading(false);

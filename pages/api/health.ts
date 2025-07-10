@@ -13,6 +13,9 @@ export default async function handler(
     // Get the backend URL from environment variables or use default
     const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/iot-status';
     
+    // Good place to set a breakpoint
+    console.log('Health check initiated, backend URL:', backendUrl);
+    
     // Call the backend health endpoint
     const response = await fetch(`${backendUrl}/`);
     
