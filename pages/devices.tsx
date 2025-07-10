@@ -6,12 +6,25 @@ interface DeviceInfo {
   connectionState: string;
   lastActivityTime: string;
   status?: string;
+  wifiSignalStrength?: string; // WiFi signal strength as string values: None, Weak, Fair, Good, Excellent
 }
 
 export default function DevicesPage() {
   const [devices, setDevices] = useState<DeviceInfo[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+
+  // Function to normalize the signal strength class name
+  const getSignalStrengthClass = (signalStrength: string): string => {
+    // Convert to lowercase for case-insensitive comparison and handle different formats
+    const normalizedStrength = signalStrength.toLowerCase();
+    if (normalizedStrength.includes('excellent')) return 'excellent';
+    if (normalizedStrength.includes('good')) return 'good';
+    if (normalizedStrength.includes('fair')) return 'fair';
+    if (normalizedStrength.includes('weak')) return 'weak';
+    if (normalizedStrength.includes('none')) return 'none';
+    return 'none';
+  };
 
   useEffect(() => {
     // Function to fetch devices
@@ -79,6 +92,7 @@ export default function DevicesPage() {
                     <th>Device ID</th>
                     <th>Connection State</th>
                     <th>Last Activity</th>
+                    <th>WiFi Signal Strength</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -91,6 +105,19 @@ export default function DevicesPage() {
                         </span>
                       </td>
                       <td>{formatActivityTime(device.lastActivityTime)}</td>
+                      <td>
+                        {device.properties.reported.wifiSignalStrength
+                          ? <div className="wifi-indicator-container">
+                              <div className={`wifi-indicator ${getSignalStrengthClass(device.properties.reported.wifiSignalStrength)}`}>
+                                <div className="wifi-arc wifi-arc-1"></div>
+                                <div className="wifi-arc wifi-arc-2"></div>
+                                <div className="wifi-arc wifi-arc-3"></div>
+                                <div className="wifi-arc wifi-arc-4"></div>
+                              </div>
+                              <span className="wifi-text">{device.properties.reported.wifiSignalStrength}</span>
+                            </div>
+                          : <span className="wifi-text">None</span>}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -168,6 +195,38 @@ export default function DevicesPage() {
           color: #721c24;
         }
 
+        .wifi-signal {
+          display: inline-block;
+          padding: 4px 8px;
+          border-radius: 12px;
+          font-size: 0.9rem;
+        }
+
+        .wifi-signal.excellent {
+          background-color: #d4edda;
+          color: #155724;
+        }
+
+        .wifi-signal.good {
+          background-color: #d1ecf1;
+          color: #0c5460;
+        }
+
+        .wifi-signal.fair {
+          background-color: #fff3cd;
+          color: #856404;
+        }
+
+        .wifi-signal.weak {
+          background-color: #ffe0b2;
+          color: #e65100;
+        }
+
+        .wifi-signal.poor {
+          background-color: #f8d7da;
+          color: #721c24;
+        }
+
         .error {
           color: #dc3545;
         }
@@ -177,6 +236,85 @@ export default function DevicesPage() {
           font-size: 0.8rem;
           color: #6c757d;
           margin-top: 0.5rem;
+        }
+
+        .wifi-indicator-container {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+
+        .wifi-text {
+          font-size: 0.9rem;
+          margin-left: 5px;
+        }
+
+        .wifi-indicator {
+          position: relative;
+          width: 20px;
+          height: 20px;
+          display: inline-flex;
+          justify-content: center;
+          align-items: center;
+        }
+
+        .wifi-arc {
+          position: absolute;
+          border-radius: 50% 50% 0 0;
+          border-top: 3px solid #ddd;
+          width: 100%;
+          height: 100%;
+          transform-origin: bottom;
+          opacity: 0.2;
+        }
+
+        .wifi-arc-1 {
+          width: 25%;
+          height: 25%;
+        }
+        
+        .wifi-arc-2 {
+          width: 50%;
+          height: 50%;
+        }
+        
+        .wifi-arc-3 {
+          width: 75%;
+          height: 75%;
+        }
+        
+        .wifi-arc-4 {
+          width: 100%;
+          height: 100%;
+        }
+
+        /* Signal strength-based styling */
+        .wifi-indicator.excellent .wifi-arc {
+          border-top-color: #28a745;
+          opacity: 1;
+        }
+
+        .wifi-indicator.good .wifi-arc-1,
+        .wifi-indicator.good .wifi-arc-2,
+        .wifi-indicator.good .wifi-arc-3 {
+          border-top-color: #17a2b8;
+          opacity: 1;
+        }
+
+        .wifi-indicator.fair .wifi-arc-1,
+        .wifi-indicator.fair .wifi-arc-2 {
+          border-top-color: #ffc107;
+          opacity: 1;
+        }
+
+        .wifi-indicator.weak .wifi-arc-1 {
+          border-top-color: #fd7e14;
+          opacity: 1;
+        }
+
+        .wifi-indicator.none .wifi-arc {
+          border-top-color: #dc3545;
+          opacity: 0.2;
         }
       `}</style>
     </>
