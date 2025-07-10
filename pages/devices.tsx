@@ -7,6 +7,12 @@ interface DeviceInfo {
   lastActivityTime: string;
   status?: string;
   wifiSignalStrength?: string; // WiFi signal strength as string values: None, Weak, Fair, Good, Excellent
+  properties?: {
+    reported: {
+      wifiSignalStrength?: string;
+      batteryLevel?: number;
+    }
+  };
 }
 
 export default function DevicesPage() {
@@ -24,6 +30,15 @@ export default function DevicesPage() {
     if (normalizedStrength.includes('weak')) return 'weak';
     if (normalizedStrength.includes('none')) return 'none';
     return 'none';
+  };
+
+  // Function to determine battery level class based on percentage
+  const getBatteryLevelClass = (batteryLevel: number): string => {
+    if (batteryLevel >= 80) return 'full';
+    if (batteryLevel >= 60) return 'high';
+    if (batteryLevel >= 40) return 'medium';
+    if (batteryLevel >= 20) return 'low';
+    return 'critical';
   };
 
   useEffect(() => {
@@ -93,6 +108,7 @@ export default function DevicesPage() {
                     <th>Connection State</th>
                     <th>Last Activity</th>
                     <th>WiFi Signal Strength</th>
+                    <th>Battery Level</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -106,7 +122,7 @@ export default function DevicesPage() {
                       </td>
                       <td>{formatActivityTime(device.lastActivityTime)}</td>
                       <td>
-                        {device.properties.reported.wifiSignalStrength
+                        {device.properties?.reported.wifiSignalStrength
                           ? <div className="wifi-indicator-container">
                               <div className={`wifi-indicator ${getSignalStrengthClass(device.properties.reported.wifiSignalStrength)}`}>
                                 <div className="wifi-arc wifi-arc-1"></div>
@@ -117,6 +133,22 @@ export default function DevicesPage() {
                               <span className="wifi-text">{device.properties.reported.wifiSignalStrength}</span>
                             </div>
                           : <span className="wifi-text">None</span>}
+                      </td>
+                      <td>
+                        {device.properties?.reported.batteryLevel !== undefined
+                          ? <div className="battery-indicator-container">
+                              <div className={`battery-indicator ${getBatteryLevelClass(device.properties.reported.batteryLevel)}`}>
+                                <div className="battery-body">
+                                  <div 
+                                    className="battery-level" 
+                                    style={{width: `${Math.min(100, Math.max(0, device.properties.reported.batteryLevel))}%`}}
+                                  ></div>
+                                </div>
+                                <div className="battery-cap"></div>
+                              </div>
+                              <span className="battery-text">{device.properties.reported.batteryLevel}%</span>
+                            </div>
+                          : <span className="battery-text">Unknown</span>}
                       </td>
                     </tr>
                   ))}
@@ -315,6 +347,103 @@ export default function DevicesPage() {
         .wifi-indicator.none .wifi-arc {
           border-top-color: #dc3545;
           opacity: 0.2;
+        }
+
+        /* Battery indicator styles */
+        .battery-indicator-container {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+
+        .battery-text {
+          font-size: 0.9rem;
+          margin-left: 5px;
+        }
+
+        .battery-indicator {
+          position: relative;
+          width: 30px;
+          height: 16px;
+          display: inline-flex;
+          align-items: center;
+        }
+
+        .battery-body {
+          width: 24px;
+          height: 12px;
+          border: 2px solid #ddd;
+          border-radius: 2px;
+          position: relative;
+          overflow: hidden;
+        }
+
+        .battery-cap {
+          width: 2px;
+          height: 6px;
+          background-color: #ddd;
+          margin-left: 1px;
+          border-radius: 0 2px 2px 0;
+        }
+
+        .battery-level {
+          position: absolute;
+          left: 0;
+          top: 0;
+          height: 100%;
+          background-color: #ddd;
+          transition: width 0.3s ease;
+        }
+
+        /* Battery level-based styling */
+        .battery-indicator.full .battery-body {
+          border-color: #28a745;
+        }
+        .battery-indicator.full .battery-level {
+          background-color: #28a745;
+        }
+        .battery-indicator.full .battery-cap {
+          background-color: #28a745;
+        }
+
+        .battery-indicator.high .battery-body {
+          border-color: #17a2b8;
+        }
+        .battery-indicator.high .battery-level {
+          background-color: #17a2b8;
+        }
+        .battery-indicator.high .battery-cap {
+          background-color: #17a2b8;
+        }
+
+        .battery-indicator.medium .battery-body {
+          border-color: #ffc107;
+        }
+        .battery-indicator.medium .battery-level {
+          background-color: #ffc107;
+        }
+        .battery-indicator.medium .battery-cap {
+          background-color: #ffc107;
+        }
+
+        .battery-indicator.low .battery-body {
+          border-color: #fd7e14;
+        }
+        .battery-indicator.low .battery-level {
+          background-color: #fd7e14;
+        }
+        .battery-indicator.low .battery-cap {
+          background-color: #fd7e14;
+        }
+
+        .battery-indicator.critical .battery-body {
+          border-color: #dc3545;
+        }
+        .battery-indicator.critical .battery-level {
+          background-color: #dc3545;
+        }
+        .battery-indicator.critical .battery-cap {
+          background-color: #dc3545;
         }
       `}</style>
     </>
