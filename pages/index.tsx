@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
+import Link from 'next/link';
 
 export default function Home() {
   const [message, setMessage] = useState('Loading...');
@@ -9,7 +10,7 @@ export default function Home() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await fetch('/api/health');
+        const response = await fetch('/iot-status');
         const data = await response.json();
         setMessage(data.message || 'Connected to backend!');
         setLoading(false);
@@ -43,26 +44,26 @@ export default function Home() {
               <p className="success">{message}</p>
             )}
           </div>
+          <div className="card">
+            <h2>IoT Device Management</h2>
+            <p>View and monitor your connected IoT devices in real-time.</p>
+            <div className="button-container">
+              <Link href="/devices" className="button">View Devices</Link>
+            </div>
+          </div>
         </div>
       </main>
 
       <style jsx>{`
         .container {
-          min-height: 100vh;
-          padding: 0 0.5rem;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
+          min-height: calc(100vh - 80px);
+          padding: 1rem 2rem;
+          max-width: 1200px;
+          margin: 0 auto;
         }
 
         main {
-          padding: 5rem 0;
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
+          padding: 2rem 0;
         }
 
         .card {
@@ -95,6 +96,28 @@ export default function Home() {
 
         .success {
           color: #00cc00;
+        }
+
+        .button-container {
+          margin-top: 1rem;
+          display: flex;
+          justify-content: flex-end;
+        }
+
+        .button {
+          display: inline-block;
+          background-color: #0070f3;
+          color: white;
+          border: none;
+          padding: 0.5rem 1rem;
+          border-radius: 5px;
+          font-size: 1rem;
+          cursor: pointer;
+          transition: background-color 0.2s ease;
+        }
+
+        .button:hover {
+          background-color: #0051bb;
         }
       `}</style>
     </>
