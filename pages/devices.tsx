@@ -124,11 +124,11 @@ export default function DevicesPage() {
                       <td>
                         {device.properties?.reported.wifiSignalStrength
                           ? <div className="wifi-indicator-container">
-                              <div className={`wifi-indicator ${getSignalStrengthClass(device.properties.reported.wifiSignalStrength)}`}>
-                                <div className="wifi-arc wifi-arc-1"></div>
-                                <div className="wifi-arc wifi-arc-2"></div>
-                                <div className="wifi-arc wifi-arc-3"></div>
-                                <div className="wifi-arc wifi-arc-4"></div>
+                              <div className={`wifi-signal-icon ${getSignalStrengthClass(device.properties.reported.wifiSignalStrength)}`}>
+                                <div className="wifi-signal-bar bar-1"></div>
+                                <div className="wifi-signal-bar bar-2"></div>
+                                <div className="wifi-signal-bar bar-3"></div>
+                                <div className="wifi-signal-bar bar-4"></div>
                               </div>
                               <span className="wifi-text">{device.properties.reported.wifiSignalStrength}</span>
                             </div>
@@ -278,75 +278,68 @@ export default function DevicesPage() {
 
         .wifi-text {
           font-size: 0.9rem;
-          margin-left: 5px;
+          margin-left: 8px;
         }
-
-        .wifi-indicator {
-          position: relative;
+        
+        .wifi-signal-icon {
+          display: flex;
+          align-items: flex-end;
+          justify-content: space-between;
           width: 20px;
-          height: 20px;
-          display: inline-flex;
-          justify-content: center;
-          align-items: center;
-        }
-
-        .wifi-arc {
-          position: absolute;
-          border-radius: 50% 50% 0 0;
-          border-top: 3px solid #ddd;
-          width: 100%;
-          height: 100%;
-          transform-origin: bottom;
-          opacity: 0.2;
-        }
-
-        .wifi-arc-1 {
-          width: 25%;
-          height: 25%;
+          height: 16px;
         }
         
-        .wifi-arc-2 {
-          width: 50%;
-          height: 50%;
+        .wifi-signal-bar {
+          width: 3px;
+          background-color: #ddd;
+          margin: 0 1px;
+          border-radius: 2px;
+          opacity: 0.3;
         }
         
-        .wifi-arc-3 {
-          width: 75%;
-          height: 75%;
+        .bar-1 {
+          height: 4px;
         }
         
-        .wifi-arc-4 {
-          width: 100%;
-          height: 100%;
+        .bar-2 {
+          height: 8px;
         }
-
+        
+        .bar-3 {
+          height: 12px;
+        }
+        
+        .bar-4 {
+          height: 16px;
+        }
+        
         /* Signal strength-based styling */
-        .wifi-indicator.excellent .wifi-arc {
-          border-top-color: #28a745;
+        .wifi-signal-icon.excellent .wifi-signal-bar {
+          background-color: #28a745;
           opacity: 1;
         }
-
-        .wifi-indicator.good .wifi-arc-1,
-        .wifi-indicator.good .wifi-arc-2,
-        .wifi-indicator.good .wifi-arc-3 {
-          border-top-color: #17a2b8;
+        
+        .wifi-signal-icon.good .wifi-signal-bar.bar-1,
+        .wifi-signal-icon.good .wifi-signal-bar.bar-2,
+        .wifi-signal-icon.good .wifi-signal-bar.bar-3 {
+          background-color: #17a2b8;
           opacity: 1;
         }
-
-        .wifi-indicator.fair .wifi-arc-1,
-        .wifi-indicator.fair .wifi-arc-2 {
-          border-top-color: #ffc107;
+        
+        .wifi-signal-icon.fair .wifi-signal-bar.bar-1,
+        .wifi-signal-icon.fair .wifi-signal-bar.bar-2 {
+          background-color: #ffc107;
           opacity: 1;
         }
-
-        .wifi-indicator.weak .wifi-arc-1 {
-          border-top-color: #fd7e14;
+        
+        .wifi-signal-icon.weak .wifi-signal-bar.bar-1 {
+          background-color: #fd7e14;
           opacity: 1;
         }
-
-        .wifi-indicator.none .wifi-arc {
-          border-top-color: #dc3545;
-          opacity: 0.2;
+        
+        .wifi-signal-icon.none .wifi-signal-bar {
+          background-color: #dc3545;
+          opacity: 0.3;
         }
 
         /* Battery indicator styles */
