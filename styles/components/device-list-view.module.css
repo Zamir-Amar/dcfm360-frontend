@@ -21,8 +21,12 @@
   font-weight: 600;
 }
 
-.device-table tr:hover {
-  background-color: #f8f9fa;
+.device-row {
+  transition: background-color 0.2s ease;
+}
+
+.device-row:hover {
+  background-color: #f1f5fa;
 }
 
 .connection-state {
