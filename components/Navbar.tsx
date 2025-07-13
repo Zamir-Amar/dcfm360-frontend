@@ -25,7 +25,7 @@ export default function Navbar() {
       </div>
       <style jsx>{`
         .navbar {
-          background-color: #333;
+          background-color: #e6c700;
           height: 60px;
           display: flex;
           justify-content: center;
