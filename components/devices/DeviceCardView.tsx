@@ -25,7 +25,9 @@ export function DeviceCardView({ devices }: DeviceCardViewProps) {
             </div>
             <div className={styles['device-info']}>
               <span className={styles['device-label']}>WiFi Signal:</span>
-              <WiFiIndicator signalStrength={device.properties?.reported.wifiSignalStrength} />
+              <span className={styles['device-value-inline']}>
+                <WiFiIndicator signalStrength={device.properties?.reported.wifiSignalStrength} />
+              </span>
             </div>
             <div className={styles['device-info']}>
               <span className={styles['device-label']}>Battery Level:</span>

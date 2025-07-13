@@ -46,6 +46,14 @@
   color: #666;
 }
 
+.device-value-inline {
+  margin-left: 0.5rem;
+  color: #666;
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+}
+
 .connection-state {
   display: inline-block;
   padding: 4px 8px;

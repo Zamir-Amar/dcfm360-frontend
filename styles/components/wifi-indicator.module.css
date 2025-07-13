@@ -1,12 +1,18 @@
 .wifi-indicator-container {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
+}
+
+.wifi-label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #333;
 }
 
 .wifi-text {
   font-size: 0.9rem;
-  margin-left: 8px;
+  color: #666;
 }
 
 .wifi-signal-icon {
