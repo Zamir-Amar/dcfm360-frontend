@@ -8,7 +8,7 @@ export default function Navbar() {
     <nav className="navbar">
       <div className="navbar-container">
         <Link href="/" className="navbar-logo">
-          DCFM360
+          Data Center Fleet Management 360
         </Link>
         <ul className="nav-menu">
           <li className="nav-item">
@@ -47,7 +47,7 @@ export default function Navbar() {
         }
 
         .navbar-logo {
-          color: #fff;
+          color: white;
           font-size: 1.5rem;
           font-weight: bold;
           text-decoration: none;
@@ -66,7 +66,7 @@ export default function Navbar() {
         }
 
         .nav-link {
-          color: #fff;
+          color: #ffff00;
           text-decoration: none;
           padding: 8px 0;
           transition: color 0.2s ease;

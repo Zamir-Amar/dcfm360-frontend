@@ -53,7 +53,8 @@ export default function DevicesPage() {
         if (data.error) {
           setError(data.error);
         } else {
-          setDevices(data);
+          // Ensure data is an array before setting it to the state
+          setDevices(Array.isArray(data) ? data : []);
           setError('');
         }
         setLoading(false);
@@ -66,10 +67,10 @@ export default function DevicesPage() {
     // Initial fetch
     fetchDevices();
 
-    // Set up interval to refresh every 3 seconds
+    // Set up interval to refresh every 1 second
     const intervalId = setInterval(() => {
       fetchDevices();
-    }, 3000);
+    }, 1000);
 
     // Clean up interval on component unmount
     return () => clearInterval(intervalId);
@@ -98,6 +99,8 @@ export default function DevicesPage() {
               <p>Loading devices...</p>
             ) : error ? (
               <p className="error">{error}</p>
+            ) : !Array.isArray(devices) ? (
+              <p>Invalid device data received.</p>
             ) : devices.length === 0 ? (
               <p>No devices found.</p>
             ) : (
@@ -155,9 +158,6 @@ export default function DevicesPage() {
                 </tbody>
               </table>
             )}
-            <div className="refresh-info">
-              <p>Auto-refreshes every 3 seconds</p>
-            </div>
           </div>
         </div>
       </main>
