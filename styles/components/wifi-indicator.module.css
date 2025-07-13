@@ -1,0 +1,71 @@
+.wifi-indicator-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.wifi-text {
+  font-size: 0.9rem;
+  margin-left: 8px;
+}
+
+.wifi-signal-icon {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  width: 20px;
+  height: 16px;
+}
+
+.wifi-signal-bar {
+  width: 3px;
+  background-color: #ddd;
+  margin: 0 1px;
+  border-radius: 2px;
+  opacity: 0.3;
+}
+
+.bar-1 {
+  height: 4px;
+}
+
+.bar-2 {
+  height: 8px;
+}
+
+.bar-3 {
+  height: 12px;
+}
+
+.bar-4 {
+  height: 16px;
+}
+
+/* Signal strength-based styling */
+.wifi-signal-icon.excellent .wifi-signal-bar {
+  background-color: #28a745;
+  opacity: 1;
+}
+
+.wifi-signal-icon.good .wifi-signal-bar.bar-1,
+.wifi-signal-icon.good .wifi-signal-bar.bar-2,
+.wifi-signal-icon.good .wifi-signal-bar.bar-3 {
+  background-color: #17a2b8;
+  opacity: 1;
+}
+
+.wifi-signal-icon.fair .wifi-signal-bar.bar-1,
+.wifi-signal-icon.fair .wifi-signal-bar.bar-2 {
+  background-color: #ffc107;
+  opacity: 1;
+}
+
+.wifi-signal-icon.weak .wifi-signal-bar.bar-1 {
+  background-color: #fd7e14;
+  opacity: 1;
+}
+
+.wifi-signal-icon.none .wifi-signal-bar {
+  background-color: #dc3545;
+  opacity: 0.3;
+}
