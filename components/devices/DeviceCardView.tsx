@@ -2,27 +2,18 @@ import { DeviceInfo, formatActivityTime } from '../../hooks/useDevices';
 import { BatteryIndicator } from './BatteryIndicator';
 import { WiFiIndicator } from './WiFiIndicator';
 import styles from '../../styles/components/device-card-view.module.css';
-import { useRouter } from 'next/router';
 
 interface DeviceCardViewProps {
   devices: DeviceInfo[];
 }
 
 export function DeviceCardView({ devices }: DeviceCardViewProps) {
-  const router = useRouter();
-
-  const handleDeviceClick = (deviceId: string) => {
-    router.push(`/device/${deviceId}`);
-  };
-
   return (
     <div className={styles['device-card-container']}>
       {devices.map((device) => (
         <div 
           key={device.deviceId} 
           className={`${styles['device-card']} ${styles[device.connectionState.toLowerCase()]}`}
-          onClick={() => handleDeviceClick(device.deviceId)}
-          style={{ cursor: 'pointer' }}
         >
           <div className={styles['device-card-header']}>
             <h3 className={styles['device-card-title']}>{device.deviceId}</h3>

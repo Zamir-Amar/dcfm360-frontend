@@ -105,14 +105,12 @@ export default function DeviceDetailPage() {
                 <span className={styles['info-label']}>WiFi Signal:</span>
                 <div className={styles['info-value-with-indicator']}>
                   <WiFiIndicator signalStrength={device.properties?.reported.wifiSignalStrength} />
-                  <span>{device.properties?.reported.wifiSignalStrength || 'N/A'}</span>
                 </div>
               </div>
               <div className={styles['info-row']}>
                 <span className={styles['info-label']}>Battery Level:</span>
                 <div className={styles['info-value-with-indicator']}>
                   <BatteryIndicator batteryLevel={device.properties?.reported.batteryLevel} />
-                  <span>{device.properties?.reported.batteryLevel ? `${device.properties.reported.batteryLevel}%` : 'N/A'}</span>
                 </div>
               </div>
             </div>
