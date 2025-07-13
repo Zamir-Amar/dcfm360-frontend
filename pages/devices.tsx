@@ -19,6 +19,7 @@ export default function DevicesPage() {
   const [devices, setDevices] = useState<DeviceInfo[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [viewMode, setViewMode] = useState<'list' | 'card'>('list');
 
   // Function to normalize the signal strength class name
   const getSignalStrengthClass = (signalStrength: string): string => {
@@ -70,7 +71,7 @@ export default function DevicesPage() {
     // Set up interval to refresh every 1 second
     const intervalId = setInterval(() => {
       fetchDevices();
-    }, 1000);
+    }, 5000);
 
     // Clean up interval on component unmount
     return () => clearInterval(intervalId);
@@ -94,7 +95,21 @@ export default function DevicesPage() {
         <div className="container">
           <h1>IoT Device Management</h1>
           <div className="device-table-container">
-            <h2>Connected Devices</h2>
+            <div className="header-controls">
+              <h2>Connected Devices</h2>
+              <div className="view-controls">
+                <label htmlFor="view-mode">View Mode:</label>
+                <select 
+                  id="view-mode" 
+                  value={viewMode} 
+                  onChange={(e) => setViewMode(e.target.value as 'list' | 'card')}
+                  className="view-mode-select"
+                >
+                  <option value="list">List View</option>
+                  <option value="card">Card View</option>
+                </select>
+              </div>
+            </div>
             {loading ? (
               <p>Loading devices...</p>
             ) : error ? (
@@ -103,7 +118,7 @@ export default function DevicesPage() {
               <p>Invalid device data received.</p>
             ) : devices.length === 0 ? (
               <p>No devices found.</p>
-            ) : (
+            ) : viewMode === 'list' ? (
               <table className="device-table">
                 <thead>
                   <tr>
@@ -144,7 +159,7 @@ export default function DevicesPage() {
                                 <div className="battery-body">
                                   <div 
                                     className="battery-level" 
-                                    style={{width: `${Math.min(100, Math.max(0, device.properties.reported.batteryLevel))}%`}}
+                                    style={{width: `${Math.min(100, Math.max(0, device.properties?.reported.batteryLevel || 0))}%`}}
                                   ></div>
                                 </div>
                                 <div className="battery-cap"></div>
@@ -157,6 +172,52 @@ export default function DevicesPage() {
                   ))}
                 </tbody>
               </table>
+            ) : (
+              <div className="device-card-container">
+                {devices.map((device) => (
+                  <div key={device.deviceId} className="device-card">
+                    <div className="device-card-header">
+                      <h3 className="device-card-title">{device.deviceId}</h3>
+                      <span className={`connection-state ${device.connectionState.toLowerCase()}`}>
+                        {device.connectionState}
+                      </span>
+                    </div>
+                    <div className="device-card-body">
+                      <div className="device-info">
+                        <span className="device-label">Last Activity:</span>
+                        <span className="device-value">{formatActivityTime(device.lastActivityTime)}</span>
+                      </div>
+                      <div className="device-info">
+                        <span className="device-label">WiFi Signal:</span>
+                        <div className="wifi-indicator-container">
+                          <div className={`wifi-signal-icon ${getSignalStrengthClass(device.properties?.reported.wifiSignalStrength || '')}`}>
+                            <div className="wifi-signal-bar bar-1"></div>
+                            <div className="wifi-signal-bar bar-2"></div>
+                            <div className="wifi-signal-bar bar-3"></div>
+                            <div className="wifi-signal-bar bar-4"></div>
+                          </div>
+                          <span className="wifi-text">{device.properties?.reported.wifiSignalStrength || 'None'}</span>
+                        </div>
+                      </div>
+                      <div className="device-info">
+                        <span className="device-label">Battery Level:</span>
+                        <div className="battery-indicator-container">
+                          <div className={`battery-indicator ${getBatteryLevelClass(device.properties?.reported.batteryLevel || 0)}`}>
+                            <div className="battery-body">
+                              <div 
+                                className="battery-level" 
+                                style={{width: `${Math.min(100, Math.max(0, device.properties?.reported.batteryLevel || 0))}%`}}
+                              ></div>
+                            </div>
+                            <div className="battery-cap"></div>
+                          </div>
+                          <span className="battery-text">{device.properties?.reported.batteryLevel !== undefined ? `${device.properties.reported.batteryLevel}%` : 'Unknown'}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             )}
           </div>
         </div>
@@ -180,6 +241,37 @@ export default function DevicesPage() {
           box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
           padding: 1.5rem;
           margin-bottom: 2rem;
+        }
+
+        .header-controls {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 1.5rem;
+        }
+
+        .view-controls {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+        }
+
+        label {
+          font-size: 0.9rem;
+          color: #333;
+        }
+
+        .view-mode-select {
+          padding: 0.4rem 0.8rem;
+          border-radius: 4px;
+          border: 1px solid #ddd;
+          background-color: white;
+          cursor: pointer;
+        }
+
+        .view-mode-select:focus {
+          border-color: #0070f3;
+          outline: none;
         }
 
         h2 {
@@ -437,6 +529,54 @@ export default function DevicesPage() {
         }
         .battery-indicator.critical .battery-cap {
           background-color: #dc3545;
+        }
+
+        .device-card-container {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+          gap: 1.5rem;
+        }
+
+        .device-card {
+          background: white;
+          border-radius: 8px;
+          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+          padding: 1.5rem;
+          transition: transform 0.3s;
+        }
+
+        .device-card:hover {
+          transform: translateY(-2px);
+        }
+
+        .device-card-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 1rem;
+        }
+
+        .device-card-title {
+          font-size: 1.1rem;
+          margin: 0;
+        }
+
+        .device-card-body {
+          font-size: 0.9rem;
+        }
+
+        .device-info {
+          margin-bottom: 0.5rem;
+        }
+
+        .device-label {
+          font-weight: 500;
+          color: #333;
+        }
+
+        .device-value {
+          margin-left: 0.5rem;
+          color: #666;
         }
       `}</style>
     </>
