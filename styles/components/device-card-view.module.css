@@ -9,11 +9,22 @@
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   padding: 1.5rem;
-  transition: transform 0.3s;
+  transition: transform 0.3s, background-color 0.3s;
+  border-left: 5px solid transparent;
 }
 
 .device-card:hover {
   transform: translateY(-2px);
+}
+
+.device-card.connected {
+  background-color: rgba(212, 237, 218, 0.3);
+  border-left-color: #28a745;
+}
+
+.device-card.disconnected {
+  background-color: rgba(248, 215, 218, 0.3);
+  border-left-color: #dc3545;
 }
 
 .device-card-header {
@@ -54,19 +65,7 @@
   vertical-align: middle;
 }
 
+/* We're not using these anymore, but keeping them for reference or future use */
 .connection-state {
-  display: inline-block;
-  padding: 4px 8px;
-  border-radius: 12px;
-  font-size: 0.9rem;
-}
-
-.connection-state.connected {
-  background-color: #d4edda;
-  color: #155724;
-}
-
-.connection-state.disconnected {
-  background-color: #f8d7da;
-  color: #721c24;
+  display: none;
 }

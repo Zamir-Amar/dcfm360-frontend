@@ -11,12 +11,12 @@ export function DeviceCardView({ devices }: DeviceCardViewProps) {
   return (
     <div className={styles['device-card-container']}>
       {devices.map((device) => (
-        <div key={device.deviceId} className={styles['device-card']}>
+        <div 
+          key={device.deviceId} 
+          className={`${styles['device-card']} ${styles[device.connectionState.toLowerCase()]}`}
+        >
           <div className={styles['device-card-header']}>
             <h3 className={styles['device-card-title']}>{device.deviceId}</h3>
-            <span className={`${styles['connection-state']} ${styles[device.connectionState.toLowerCase()]}`}>
-              {device.connectionState}
-            </span>
           </div>
           <div className={styles['device-card-body']}>
             <div className={styles['device-info']}>
